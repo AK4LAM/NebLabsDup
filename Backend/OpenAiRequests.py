@@ -5,19 +5,6 @@ import asyncio
 from fastapi import UploadFile
 from typing import List
 
-### LAUNCH VENV ###
-# source apiEnv/bin/activate
-
-### SET OPENAI KEY ###
-# 1. Run the following command in your terminal, replacing yourkey with your API key. 
-# echo "export OPENAI_API_KEY='sk-proj-irO6EhC3hi78n3ihph5RT3BlbkFJLzpNeFtTPjN5MkGj614X'" >> ~/.zshrc
- 
-# 2. Update the shell with the new variable:
-# source ~/.zshrc
- 
-# 3. Confirm that you have set your environment variable using the following command. 
-# echo $OPENAI_API_KEY
-
 
 openai.api_key = os.environ["OPENAI_API_KEY"]
 client = OpenAI()
@@ -142,6 +129,6 @@ async def messageRun(content: str):
 async def messageRunDebug():
     content=input("Provide input >> ")
     async for item in messageRun(content):
-        print (answer_text, end="")
+        print (item, end="")
 
 # asyncio.run(messageRunDebug())
