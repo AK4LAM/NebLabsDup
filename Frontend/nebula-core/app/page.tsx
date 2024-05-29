@@ -5,8 +5,7 @@ export default function Home() {
   return (
     <div>
       <h1>Welcome to the AI Interaction Portal</h1>
-      {/* <Chat /> */}
-      {/* <FileUpload /> */}
+
     </div>
   );
 }
