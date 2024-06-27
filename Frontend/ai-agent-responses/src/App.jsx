@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import FastAPIInteraction from './assets/FastAPIInteraction.jsx'
+// App.jsx
+import FastAPIInteraction from './components/FastAPIInteraction.jsx'
 import './App.css'
 
 function App() {

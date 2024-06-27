@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+const OpenAPIurl = "http://127.0.0.1:8000"; // Ensure this URL points to your FastAPI server
 
 const FastAPIInteraction = () => {
   // State variables for managing input, files, result, and loading status
@@ -19,14 +20,14 @@ const FastAPIInteraction = () => {
 
   // Handler of form submission
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent default form submission
-    setIsLoading(true); // Set loading state to true
-    setResult(''); // Clear previous result
+    e.preventDefault();
+    setIsLoading(true);
+    setResult('');
 
     try {
       // Send text input if provided
       if (textInput) {
-        const textResponse = await fetch('/message', {
+        const textResponse = await fetch(`${OpenAPIurl}/message`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -54,7 +55,7 @@ const FastAPIInteraction = () => {
         const formData = new FormData();
         files.forEach(file => formData.append('files', file));
 
-        const fileResponse = await fetch('/uploadfiles/', {
+        const fileResponse = await fetch(`${OpenAPIurl}/uploadfiles/`, {
           method: 'POST',
           body: formData,
         });
