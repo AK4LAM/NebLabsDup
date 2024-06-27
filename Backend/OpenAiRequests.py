@@ -1,3 +1,4 @@
+# OpenAiRequests.py
 from openai import OpenAI
 import openai
 import os
@@ -33,7 +34,7 @@ currentChat = "Chat1"
 def getModels():
     return client.models.list()
 
-
+### TODO: (maybe) add instructions to tailor assistant to specific site?
 def createAssistant(instructions: str = "", 
                     name: str = "Default Name", 
                     description: str = "",
