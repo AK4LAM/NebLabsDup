@@ -1,4 +1,4 @@
-# FastAPI.py
+# FastAPI.py
 from fastapi import FastAPI, HTTPException, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List
@@ -16,6 +16,7 @@ import logging
 # uvicorn FastAPI:app --reload
 
 # Access auto-generated documentation at http://127.0.0.1:8000/docs
+# Also acts as a test for whether server is up and running or not
 
 app = FastAPI()
 
@@ -23,26 +24,24 @@ app = FastAPI()
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+# Add CORS middleware
 app.add_middleware(
-    CORSMiddleware, 
-    allow_origins=["http://localhost:5137"], 
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],  # Adjust to your frontend's URL
     allow_credentials=True,
-    allow_methods=["*"], 
-    allow_headers=["*"])
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Define a Pydantic model for the request body
 class MessageRequest(BaseModel):
     content: str
 
-#@app.get("/")
-#async def root():
-#    return {"message": "Hello World"}
-
 # Endpoint for message requests
 @app.post("/message/")
 async def message_user(request: MessageRequest):
     # Implement the messageRun function or logic here
-    # async def messageRun(content: str):
+    # async def messageRun(content: str):
     #    yield f"Processing message: {content}"
     
     return StreamingResponse(messageRun(request.content), media_type="text/plain")
