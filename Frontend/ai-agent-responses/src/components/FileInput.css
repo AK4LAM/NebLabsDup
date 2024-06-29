@@ -1,0 +1,37 @@
+.file-input-container {
+    transition: all 0.3s;
+  }
+  
+  .file-input-container:focus-within {
+    transform: scale(1.05);
+  }
+  
+  .file-input-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #4a5568;
+    margin-bottom: 0.25rem;
+  }
+  
+  .file-input {
+    width: 100%;
+    font-size: 0.875rem;
+    color: #718096;
+  }
+  
+  .file-input::file-selector-button {
+    margin-right: 1rem;
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    border: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    background-color: #ebf8ff;
+    color: #3182ce;
+    transition: background-color 0.3s;
+  }
+  
+  .file-input::file-selector-button:hover {
+    background-color: #bee3f8;
+  }

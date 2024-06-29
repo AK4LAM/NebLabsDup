@@ -1,13 +1,17 @@
 // App.jsx
-import FastAPIInteraction from './components/FastAPIInteraction.jsx'
+import CustomerSupportWidget from './components/CustomerSupportWidget.jsx'
 import './App.css'
+import './components/CustomerSupportWidget.css'
+import './components/FileInput.css'
+import './components/TextInput.css'
+import './components/Chat.css'
 
 function App() {
 
   return (
     <>
-      <div>
-        <FastAPIInteraction />
+      <div className="customer-support-widget-container">
+        <CustomerSupportWidget />
       </div>
     </>
   )

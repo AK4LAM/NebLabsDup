@@ -1,16 +1,23 @@
 // FastAPIInteraction.jsx
 import React, { useState } from 'react';
-import TextInput from '../components/TextInput';
-import FileInput from '../components/FileInput';
-import ResultDisplay from '../components/ResultDisplay';
+import TextInput from './TextInput';
+import FileInput from './FileInput';
+import SubmitButton from './SubmitButton';
+import Chat from './Chat';
+import './CustomerSupportWidget.css';
 
-const OpenAPIurl = "http://127.0.0.1:8000"; // Ensure this URL points to your FastAPI server
+// Properties
+const Title = "Customer Support Widget";
 
-const FastAPIInteraction = () => {
+// Ensure this URL points to your FastAPI server
+const OpenAPIurl = "http://127.0.0.1:8000"; 
+
+const CustomerSupportWidget = () => {
   const [textInput, setTextInput] = useState('');
   const [files, setFiles] = useState([]);
   const [result, setResult] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [messages, setMessages] = useState([]);
 
   const handleTextChange = (e) => {
     setTextInput(e.target.value);
@@ -24,10 +31,12 @@ const FastAPIInteraction = () => {
     e.preventDefault();
     setIsLoading(true);
     setResult('');
-  
+
     try {
       // Handle text input submission
+      setTextInput('');
       if (textInput) {
+        setMessages(prev => [...prev, { sender: 'user', text: textInput }]);
         const textResponse = await fetch(`${OpenAPIurl}/message/`, {
           method: 'POST',
           headers: {
@@ -35,67 +44,64 @@ const FastAPIInteraction = () => {
           },
           body: JSON.stringify({ content: textInput }),
         });
-  
+
         if (!textResponse.ok) {
           throw new Error(`HTTP error! status: ${textResponse.status}`);
         }
-  
+
         const reader = textResponse.body.getReader();
         const decoder = new TextDecoder();
-  
+
         let resultText = '';
         while (true) {
           const { done, value } = await reader.read();
           if (done) break;
           resultText += decoder.decode(value);
           setResult(prev => prev + resultText);
+          setMessages(prev => [...prev, { sender: 'system', text: resultText }]);
         }
       }
-  
+
       // Handle file input submission
       if (files.length > 0) {
         const formData = new FormData();
         files.forEach(file => formData.append('files', file));
-  
+
         const fileResponse = await fetch(`${OpenAPIurl}/uploadfiles/`, {
           method: 'POST',
           body: formData,
         });
-  
+
         if (!fileResponse.ok) {
           throw new Error(`HTTP error! status: ${fileResponse.status}`);
         }
-  
+
         const fileResult = await fileResponse.json();
         setResult(prev => prev + '\n' + JSON.stringify(fileResult, null, 2)); // Pretty print JSON
+        setMessages(prev => [...prev, { sender: 'system', text: JSON.stringify(fileResult, null, 2) }]);
       }
     } catch (error) {
       console.error('Error:', error);
       setResult(`An error occurred: ${error.message}`);
+      setMessages(prev => [...prev, { sender: 'system', text: `An error occurred: ${error.message}` }]);
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="p-8 max-w-md mx-auto bg-gray-50 rounded-3xl shadow-lg transition-all duration-300 hover:shadow-xl">
-      <h2 className="text-3xl font-light mb-6 text-gray-800">FastAPI Interaction</h2>
+    <div className="customer-support-widget-container">
+      <h2 className="customer-support-widget-title">{ Title}</h2>
       <form onSubmit={handleSubmit} className="space-y-6">
         <TextInput textInput={textInput} handleTextChange={handleTextChange} />
         <FileInput handleFileChange={handleFileChange} />
-        <button
-          type="submit"
-          disabled={isLoading}
-          className={`w-full py-2 px-4 rounded-lg text-sm font-medium text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-all duration-300 ${
-            isLoading ? 'opacity-50 cursor-not-allowed' : ''
-          }`}
-        >
-          {isLoading ? 'Processing...' : 'Submit'}
-        </button>
+        <SubmitButton isLoading={isLoading} />
       </form>
-      <ResultDisplay result={result} />
+      <div className="customer-support-widget-content">
+        <Chat messages={messages} />
+      </div>
     </div>
   );
 };
 
-export default FastAPIInteraction;
+export default CustomerSupportWidget;

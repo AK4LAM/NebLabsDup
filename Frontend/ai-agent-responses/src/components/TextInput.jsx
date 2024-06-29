@@ -1,10 +1,11 @@
 // TextInput.jsx
 import React from 'react';
+import './TextInput.css';
 
 const TextInput = ({ textInput, handleTextChange }) => {
   return (
-    <div className="transition-all duration-300 focus-within:scale-105">
-      <label htmlFor="textInput" className="block text-sm font-medium text-gray-600 mb-1">
+    <div className="text-input-container">
+      <label htmlFor="textInput" className="text-input-label">
         Text Input
       </label>
       <input
@@ -12,7 +13,7 @@ const TextInput = ({ textInput, handleTextChange }) => {
         id="textInput"
         value={textInput}
         onChange={handleTextChange}
-        className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-300"
+        className="text-input"
         placeholder="Enter your message"
       />
     </div>

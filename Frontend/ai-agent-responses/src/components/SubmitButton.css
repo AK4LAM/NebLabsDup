@@ -1,0 +1,24 @@
+.submit-button {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: white;
+    background-color: #3b82f6; /* bg-blue-500 */
+    transition: all 0.3s;
+  }
+  
+  .submit-button:hover {
+    background-color: #2563eb; /* hover:bg-blue-600 */
+  }
+  
+  .submit-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5); /* focus:ring-2 focus:ring-blue-500 */
+  }
+  
+  .submit-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }

@@ -6,9 +6,15 @@ import asyncio
 from fastapi import UploadFile
 from typing import List
 
+# Try to get the API key from the environment variable
+api_key = os.environ.get("OPENAI_API_KEY")
 
-openai.api_key = os.environ["OPENAI_API_KEY"]
-client = OpenAI()
+if not api_key:
+    raise ValueError("No OpenAI API key found. Please set the OPENAI_API_KEY environment variable.")
+
+# Create the client with the API key
+client = OpenAI(api_key=api_key)
+
 assetsPath = ""
 
 assistantIDs: list[dict[str, str]] = []

@@ -1,0 +1,28 @@
+.text-input-container {
+    transition: all 0.3s;
+  }
+  
+  .text-input-container:focus-within {
+    transform: scale(1.05);
+  }
+  
+  .text-input-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #4a5568;
+    margin-bottom: 0.25rem;
+  }
+  
+  .text-input {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s;
+  }
+  
+  .text-input:focus {
+    border-color: #3182ce;
+    box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.5);
+  }

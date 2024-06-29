@@ -10,7 +10,15 @@
   overflow: hidden; /* Optional: Ensure content fits within the container */
 }
 
-.chat-container {
-  height: calc(100% - 50px); /* Ensure it takes the full height of the container */
+.customer-support-widget-content {
+  height: 100%; /* Ensure it takes the full height of the container */
   overflow-y: auto; /* Make the content scrollable */
 }
+
+.customer-support-widget-title {
+    font-size: 1.5rem; /* text-3xl */
+    font-weight: 300; /* font-light */
+    margin-bottom: 1.5rem; /* mb-6 */
+    color: #2d3748; /* text-gray-800 */
+    text-align: center;
+  }
