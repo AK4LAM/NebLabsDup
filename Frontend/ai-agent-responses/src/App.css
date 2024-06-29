@@ -1,13 +1,14 @@
+/* App.css */
 .customer-support-widget-container {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  width: 300px; /* Adjust width as needed */
-  height: 400px; /* Adjust height as needed */
-  background-color: white; /* Optional: Add background color */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Add shadow */
-  border-radius: 8px; /* Optional: Add border radius */
-  overflow: hidden; /* Optional: Ensure content fits within the container */
+  width: 300px; 
+  height: 400px; 
+  background-color: white; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px; 
+  overflow: hidden; /* Ensure content fits within the container */
 }
 
 .chat-container {

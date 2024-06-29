@@ -1,5 +1,6 @@
+// SubmitButton.jsx
 import React from 'react';
-import './SubmitButton.css'; // Import the CSS file
+import './SubmitButton.css';
 
 const SubmitButton = ({ isLoading }) => {
   return (

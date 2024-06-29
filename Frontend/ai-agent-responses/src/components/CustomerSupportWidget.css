@@ -1,13 +1,14 @@
+/* CustomerSupportWidget.css */
 .customer-support-widget-container {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  width: 300px; /* Adjust width as needed */
-  height: 400px; /* Adjust height as needed */
-  background-color: white; /* Optional: Add background color */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Add shadow */
-  border-radius: 8px; /* Optional: Add border radius */
-  overflow: hidden; /* Optional: Ensure content fits within the container */
+  width: 300px; 
+  height: 400px; 
+  background-color: white; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+  border-radius: 8px; 
+  overflow: hidden; 
 }
 
 .customer-support-widget-content {
@@ -16,9 +17,9 @@
 }
 
 .customer-support-widget-title {
-    font-size: 1.5rem; /* text-3xl */
-    font-weight: 300; /* font-light */
-    margin-bottom: 1.5rem; /* mb-6 */
-    color: #2d3748; /* text-gray-800 */
+    font-size: 1.5rem;
+    font-weight: 300; 
+    margin-bottom: 1.5rem;
+    color: #2d3748;
     text-align: center;
   }

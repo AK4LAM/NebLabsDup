@@ -1,4 +1,4 @@
-// FastAPIInteraction.jsx
+// CustomerSupportWidget.jsx
 import React, { useState } from 'react';
 import TextInput from './TextInput';
 import FileInput from './FileInput';
