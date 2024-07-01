@@ -1,6 +1,5 @@
 # FastAPI.py
 from fastapi import FastAPI, HTTPException, UploadFile, File
-from fastapi.middleware.cors import CORSMiddleware
 from typing import List
 from pydantic import BaseModel
 from starlette.responses import StreamingResponse
@@ -23,14 +22,6 @@ app = FastAPI()
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-
-# Add CORS middleware
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # Adjust to your frontend's URL
-    allow_credentials=True,
-    allow_methods=["GET", "POST"],
-    allow_headers=["*"],)
 
 # Define a Pydantic model for the request body
 class MessageRequest(BaseModel):
