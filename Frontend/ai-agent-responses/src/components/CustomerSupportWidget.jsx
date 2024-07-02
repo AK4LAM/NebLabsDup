@@ -10,7 +10,7 @@ import './CustomerSupportWidget.css';
 const Title = "Customer Support Widget";
 
 // Ensure this URL points to your FastAPI server
-const OpenAPIurl = "http://127.0.0.1:8000"; 
+const OpenAPIurl = "/api"; 
 
 const CustomerSupportWidget = () => {
   const [textInput, setTextInput] = useState('');
@@ -34,7 +34,6 @@ const CustomerSupportWidget = () => {
 
     try {
       // Handle text input submission
-      setTextInput('');
       if (textInput) {
         setMessages(prev => [...prev, { sender: 'user', text: textInput }]);
         const textResponse = await fetch(`${OpenAPIurl}/message/`, {
@@ -58,8 +57,8 @@ const CustomerSupportWidget = () => {
           if (done) break;
           resultText += decoder.decode(value);
           setResult(prev => prev + resultText);
-          setMessages(prev => [...prev, { sender: 'system', text: resultText }]);
         }
+        setMessages(prev => [...prev, { sender: 'system', text: resultText }]);
       }
 
       // Handle file input submission
@@ -86,6 +85,8 @@ const CustomerSupportWidget = () => {
       setMessages(prev => [...prev, { sender: 'system', text: `An error occurred: ${error.message}` }]);
     } finally {
       setIsLoading(false);
+      setTextInput('');
+      setFiles([]);
     }
   };
 

@@ -39,5 +39,5 @@ async def message_user(request: MessageRequest):
 
 # Endpoint for file uploads
 @app.post("/uploadfiles/")
-async def create_upload_file(files: List[UploadFile] = File(...)):    
+async def create_upload_file(files: List[UploadFile] = File(...)):
     return uploadDocs(files)
