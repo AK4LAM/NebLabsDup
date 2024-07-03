@@ -1,17 +1,21 @@
 /* SubmitButton.css */
 .submit-button {
-    width: 100%;
-    padding: 0.5rem 1rem;
-    border-radius: 0.5rem;
-    font-size: 0.875rem;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 1.5rem;
     font-weight: 500;
-    color: white;
-    background-color: #3b82f6; /* bg-blue-500 */
+    color: #333; /* Dark text */
+    background-color: #fff; /* White background */
     transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ddd; /* Light border */
   }
   
   .submit-button:hover {
-    background-color: #2563eb; /* hover:bg-blue-600 */
+    background-color: #f0f0f0; /* Slightly darker on hover */
   }
   
   .submit-button:focus {
@@ -22,4 +26,22 @@
   .submit-button:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+  }
+
+  .spinner {
+    border: 2px solid rgba(51, 51, 51, 0.3); /* Dark spinner */
+    border-top: 2px solid #333; /* Dark spinner */
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  .arrow {
+    font-size: 1.5rem;
   }

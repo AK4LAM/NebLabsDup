@@ -1,38 +1,34 @@
 /* FileInput.css */
 .file-input-container {
-    transition: all 0.3s;
-  }
-  
-  .file-input-container:focus-within {
-    transform: scale(1.05);
-  }
-  
-  .file-input-label {
-    display: block;
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: #4a5568;
-    margin-bottom: 0.25rem;
-  }
-  
-  .file-input {
-    width: 100%;
-    font-size: 0.875rem;
-    color: #718096;
-  }
-  
-  .file-input::file-selector-button {
-    margin-right: 1rem;
-    padding: 0.5rem 1rem;
-    border-radius: 9999px;
-    border: none;
-    font-size: 0.875rem;
-    font-weight: 500;
-    background-color: #ebf8ff;
-    color: #3182ce;
-    transition: background-color 0.3s;
-  }
-  
-  .file-input::file-selector-button:hover {
-    background-color: #bee3f8;
-  }
+  position: relative;
+  display: inline-block;
+}
+
+.file-input-label {
+  display: inline-block;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #fff; /* White background */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #ddd; /* Light border */
+}
+
+.file-input {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+}
+
+.paperclip-icon {
+  width: 20px;
+  height: 20px;
+  filter: invert(0); /* Dark icon */
+}

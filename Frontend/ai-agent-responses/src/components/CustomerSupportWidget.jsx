@@ -100,14 +100,24 @@ const CustomerSupportWidget = () => {
   return (
     <div className="customer-support-widget-container">
       <h2 className="customer-support-widget-title">{ Title}</h2>
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <TextInput textInput={textInput} handleTextChange={handleTextChange} />
-        <FileInput handleFileChange={handleFileChange} />
-        <SubmitButton isLoading={isLoading} />
-      </form>
       <div className="customer-support-widget-content">
         <Chat messages={messages} />
       </div>
+      <form onSubmit={handleSubmit} className="customer-support-widget-form">
+        <FileInput 
+          handleFileChange={handleFileChange} 
+          className="customer-support-widget-file-input" 
+        />
+        <TextInput 
+          textInput={textInput} 
+          handleTextChange={handleTextChange} 
+          className="customer-support-widget-input" 
+        />
+        <SubmitButton 
+          isLoading={isLoading} 
+          className="customer-support-widget-submit-button" 
+        />
+      </form>
     </div>
   );
 };

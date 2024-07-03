@@ -9,17 +9,67 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
   border-radius: 8px; 
   overflow: hidden; 
+  border: 2px solid #4CAF50;
+  border-radius: 10px; 
+  padding: 20px; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .customer-support-widget-content {
-  height: 100%; /* Ensure it takes the full height of the container */
-  overflow-y: auto; /* Make the content scrollable */
+  flex: 1;
+  overflow-y: auto;
 }
 
 .customer-support-widget-title {
-    font-size: 1.5rem;
-    font-weight: 300; 
-    margin-bottom: 1.5rem;
-    color: #2d3748;
-    text-align: center;
-  }
+  font-size: 1.5rem;
+  font-weight: 300; 
+  margin-bottom: 1.5rem;
+  color: #2d3748;
+  text-align: center;
+}
+
+.customer-support-widget-form {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-top: 1px solid #ddd; /* Separate the form from the chat content */
+  background-color: #f9f9f9; /* Light background */
+  border-radius: 20px; /* Rounded corners */
+}
+
+.customer-support-widget-input {
+  flex: 1;
+  margin: 0 10px;
+  background-color: #fff; /* White background for input */
+  color: #333; /* Dark text */
+  border: 1px solid #ddd; /* Light border */
+  border-radius: 20px;
+  padding: 10px;
+}
+
+.customer-support-widget-input::placeholder {
+  color: #bbb; /* Lighter placeholder text */
+}
+
+.customer-support-widget-file-input,
+.customer-support-widget-submit-button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff; /* White background for buttons */
+  color: #333; /* Dark text */
+  border: 1px solid #ddd; /* Light border */
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.customer-support-widget-file-input:hover,
+.customer-support-widget-submit-button:hover {
+  background-color: #f0f0f0; /* Slightly darker on hover */
+}
