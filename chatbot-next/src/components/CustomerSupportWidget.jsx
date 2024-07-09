@@ -1,4 +1,5 @@
 // CustomerSupportWidget.jsx
+'use client';
 import React, { useState } from 'react';
 import TextInput from './TextInput';
 import FileInput from './FileInput';
@@ -13,7 +14,7 @@ const Title = "Customer Support Widget";
 const OpenAPIurl = "/api"; 
 
 // Get the API Key from environment variables
-// const api_key = import.meta.env.VITE_OPENAI_API_KEY;
+const api_key = process.env.NEXT_PUBLIC_API_KEY;
 
 const CustomerSupportWidget = () => {
   const [textInput, setTextInput] = useState('');
@@ -43,47 +44,53 @@ const CustomerSupportWidget = () => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${api_key}`,
           },
           body: JSON.stringify({ content: textInput }),
         });
+        
         if (!textResponse.ok) {
-          throw new Error(`Text submission failed: ${textResponse.statusText}`);
+          throw new Error(`HTTP error! status: ${textResponse.status}`);
         }
+        
         const reader = textResponse.body.getReader();
         const decoder = new TextDecoder();
+        
         let resultText = '';
+        
         while (true) {
           const { done, value } = await reader.read();
           if (done) break;
           resultText += decoder.decode(value);
           setResult(prev => prev + resultText);
         }
+        
         setMessages(prev => [...prev, { sender: 'system', text: resultText }]);
       }
 
-      // Handle file submission
+      // Handle file upload submission
       if (files.length > 0) {
         const formData = new FormData();
         files.forEach(file => formData.append('files', file));
+        
         const fileResponse = await fetch(`${OpenAPIurl}/uploadfiles/`, {
           method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${api_key}`,
-          },
           body: formData,
         });
+        
         if (!fileResponse.ok) {
-          throw new Error(`File upload failed: ${fileResponse.statusText}`);
+          throw new Error(`HTTP error! status: ${fileResponse.status}`);
         }
+        
         const fileResult = await fileResponse.json();
         setResult(prev => prev + '\n' + JSON.stringify(fileResult, null, 2));
         setMessages(prev => [...prev, { sender: 'system', text: JSON.stringify(fileResult, null, 2) }]);
       }
+    
     } catch (error) {
       console.error('Error:', error);
       setResult(`An error occurred: ${error.message}`);
       setMessages(prev => [...prev, { sender: 'system', text: `An error occurred: ${error.message}` }]);
+    
     } finally {
       setIsLoading(false);
       setTextInput('');
@@ -93,7 +100,7 @@ const CustomerSupportWidget = () => {
 
   return (
     <div className="customer-support-widget-container">
-      <h2 className="customer-support-widget-title">{ Title }</h2>
+      <h2 className="customer-support-widget-title">{ Title}</h2>
       <div className="customer-support-widget-content">
         <Chat messages={messages} />
       </div>

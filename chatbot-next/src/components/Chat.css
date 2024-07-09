@@ -1,0 +1,33 @@
+/* Chat.css */
+.chat-container {
+  height: 100%; /* Ensure it takes the full height of the parent container */
+  overflow-y: auto; /* Make the content scrollable */
+  border: 1px solid #ccc; 
+  padding: 10px; 
+  border-radius: 8px; 
+  background-color: #f9f9f9;
+}
+  
+.message {
+  padding: 10px;
+  margin: 5px 0;
+  border-radius: 5px;
+}
+  
+.message.user {
+  background-color: #e0f7fa;
+  align-self: flex-end;
+}
+  
+.message.system {
+  background-color: #f1f8e9;
+  align-self: flex-start;
+}
+
+.message-content p {
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* Number of lines before truncating */
+  -webkit-box-orient: vertical; /* Vertical orientation */
+  overflow: hidden; /* Hides overflow */
+  text-overflow: ellipsis; /* Adds ellipsis to indicate truncated text */
+}
