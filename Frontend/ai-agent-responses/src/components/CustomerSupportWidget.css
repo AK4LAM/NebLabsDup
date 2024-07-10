@@ -18,6 +18,10 @@
   justify-content: space-between;
 }
 
+.customer-support-widget-extended {
+  margin-top: 10px; /* Add space above the image previews */
+}
+
 .customer-support-widget-content {
   flex: 1;
   overflow-y: auto;

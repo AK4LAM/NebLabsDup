@@ -4,6 +4,7 @@ import TextInput from './TextInput';
 import FileInput from './FileInput';
 import SubmitButton from './SubmitButton';
 import Chat from './Chat';
+import ImagePreview from './ImagePreview';
 import './CustomerSupportWidget.css';
 
 // Properties
@@ -21,6 +22,7 @@ const CustomerSupportWidget = () => {
   const [result, setResult] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState([]);
+  const [imagePreview, setImagePreview] = useState(null);
 
   const handleTextChange = (e) => {
     setTextInput(e.target.value);
@@ -28,6 +30,7 @@ const CustomerSupportWidget = () => {
 
   const handleFileChange = (e) => {
     setFiles(Array.from(e.target.files));
+    setImagePreview(URL.createObjectURL(e.target.files[0]));
   };
 
   const handleSubmit = async (e) => {
@@ -43,7 +46,6 @@ const CustomerSupportWidget = () => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${api_key}`,
           },
           body: JSON.stringify({ content: textInput }),
         });
@@ -68,9 +70,6 @@ const CustomerSupportWidget = () => {
         files.forEach(file => formData.append('files', file));
         const fileResponse = await fetch(`${OpenAPIurl}/uploadfiles/`, {
           method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${api_key}`,
-          },
           body: formData,
         });
         if (!fileResponse.ok) {
@@ -88,14 +87,18 @@ const CustomerSupportWidget = () => {
       setIsLoading(false);
       setTextInput('');
       setFiles([]);
+      setImagePreview(null);
     }
   };
 
   return (
-    <div className="customer-support-widget-container">
+    <div className={`customer-support-widget-container ${imagePreview ? 'customer-support-widget-extended' : ''}`}>
       <h2 className="customer-support-widget-title">{ Title }</h2>
       <div className="customer-support-widget-content">
         <Chat messages={messages} />
+      </div>
+      <div className="customer-support-widget-image-preview">
+        <ImagePreview imagePreview={imagePreview} setImagePreview={setImagePreview} />
       </div>
       <form onSubmit={handleSubmit} className="customer-support-widget-form">
         <FileInput 
