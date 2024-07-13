@@ -53,7 +53,7 @@ async def uploadImage(file: UploadFile, message: str = ""):
             "Authorization": f"Bearer {api_key}"
         }
         payload = {
-            "model": "gpt-4-vision-preview",
+            "model": "gpt-4o",
             "messages": [
                 {
                     "role": "user",

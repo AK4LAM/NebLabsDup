@@ -23,7 +23,6 @@ const CustomerSupportWidget = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState([]);
   const [imagePreviews, setImagePreviews] = useState([]);
-  const fileInputRef = useRef(null);
 
   const handleTextChange = (e) => {
     setTextInput(e.target.value);
@@ -101,11 +100,9 @@ const CustomerSupportWidget = () => {
       setTextInput('');
       setFiles([]);
       setImagePreviews([]);
-      if (fileInputRef.current) {
-        fileInputRef.current.value = null; // Reset the file input
-      }
     }
   };
+
 
   return (
     <div className="customer-support-widget-container">
@@ -128,7 +125,6 @@ const CustomerSupportWidget = () => {
             <FileInput
               handleFileChange={handleFileChange}
               className="customer-support-widget-file-input"
-              inputRef={fileInputRef} // Pass the ref to FileInput component
             />
             <TextInput
               textInput={textInput}
