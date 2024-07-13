@@ -1,10 +1,11 @@
 # OpenAiRequests.py
 from openai import OpenAI
-import openai
 import os
 import asyncio
-from fastapi import UploadFile
+from fastapi import UploadFile, HTTPException, Form
 from typing import List
+import base64
+import requests
 
 # Try to get the API key from the environment variable
 api_key = os.environ.get("OPENAI_API_KEY")
@@ -14,14 +15,6 @@ if not api_key:
 
 # Create the client with the API key
 client = OpenAI(api_key=api_key)
-
-assetsPath = ""
-
-assistantIDs: list[dict[str, str]] = []
-threadIDs: list[str] = []
-
-tokensUsed: int = 0
-fileOverview = []
 
 class QA():
     """A question and answer pair."""
@@ -36,16 +29,12 @@ chats: dict[str, list[QA]] = {
 
 currentChat = "Chat1"
 
-
-def getModels():
-    return client.models.list()
-
 ### TODO: (maybe) add instructions to tailor assistant to specific site?
 def createAssistant(instructions: str = "", 
                     name: str = "Default Name", 
                     description: str = "",
                     tools: list[dict[str, str]] = [{"type": "code_interpreter"}], 
-                    model: str = "gpt-4o-2024-05-13"):
+                    model: str = "gpt-4-1106-preview"):
     assistant = client.beta.assistants.create(
         instructions=instructions,
         name=name,
@@ -53,54 +42,60 @@ def createAssistant(instructions: str = "",
         tools=tools,
         model=model,
     )
-    assistantIDs.append({assistant.name: assistant.id})
     return assistant
 
+async def uploadImage(file: UploadFile, message: str = ""):
+    try:
+        image_content = await file.read()
+        base64_image = base64.b64encode(image_content).decode('utf-8')
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {api_key}"
+        }
+        payload = {
+            "model": "gpt-4-vision-preview",
+            "messages": [
+                {
+                    "role": "user",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": message
+                        },
+                        {
+                            "type": "image_url",
+                            "image_url": {
+                                "url": f"data:image/jpeg;base64,{base64_image}"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "max_tokens": 300
+        }
+        response = requests.post("https://api.openai.com/v1/chat/completions", headers=headers, json=payload)
+        if response.status_code == 200:
+            return response.json()
+        else:
+            raise HTTPException(status_code=response.status_code, detail=response.text)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
-def createThread():
+async def messageRun(content: str):
+    qa = QA(question=content, answer="", sysPrompt="")
+    chats[currentChat].append(qa)
+
+    assistant = createAssistant()
     thread = client.beta.threads.create()
-    threadIDs.append(thread.id)
-    return thread
-
-
-def retrieveThread(id: str):
-    thread = client.beta.threads.retrieve(id)
-    return thread
-
-
-def uploadDocs(files: List[UploadFile]):
-    assistantFiles = []
-    # Loop through each file provided
-    for file in files:
-        # Upload each file
-        uploaded_file = client.files.create(
-            file = file.file,
-            purpose="assistants"
-        )
-        # Collect each file ID with the specified tool usage
-        assistantFiles.append(
-            {"file_id": uploaded_file.id, "tools": [{"type": "file_search"}] }
-        )
-        fileOverview.append([file.filename, uploaded_file.id])
-    return assistantFiles
-
-
-def createMessage(threadID: str, content: str, role: str = "user", attachments = None):
-    thread_message = client.beta.threads.messages.create(
-        thread_id=threadID,
-        role=role,
-        content=content,
-        attachments=attachments,
-            # [{"file_id": uploaded_file.id, "tools": [{"type": "file_search"}]}]
-        )
-    
-
-async def getAnswer(threadID: str, assistantID: str):
-    global tokensUsed
-
+    client.beta.threads.messages.create(
+        thread_id=thread.id,
+        role="user",
+        content=content
+    )
+    print("Assistant >> ", end="")
     run = client.beta.threads.runs.create(
-            thread_id=threadID,
-            assistant_id=assistantID,
+            thread_id=thread.id,
+            assistant_id=assistant.id,
             stream=True #remove line to process without streaming
         )
 
@@ -116,26 +111,9 @@ async def getAnswer(threadID: str, assistantID: str):
                         chats[currentChat][-1].answer += answer_text
                     else:
                         chats[currentChat][-1].answer += ""
-        if hasattr(event.data, "usage"):
-            if event.data.usage:
-                tokensUsed += event.data.usage.total_tokens
-
-
-async def messageRun(content: str):
-    qa = QA(question=content, answer="", sysPrompt="")
-    chats[currentChat].append(qa)
-
-    assistant = createAssistant()
-    thread = createThread()
-    createMessage(threadID=thread.id, content=content)
-    print("Assistant >> ", end="")
-    async for answer_text in getAnswer(threadID=thread.id, assistantID=assistant.id):
-        yield answer_text
-
 
 async def messageRunDebug():
     content=input("Provide input >> ")
     async for item in messageRun(content):
         print (item, end="")
 
-# asyncio.run(messageRunDebug())

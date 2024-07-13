@@ -1,5 +1,5 @@
 // CustomerSupportWidget.jsx
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import TextInput from './TextInput';
 import FileInput from './FileInput';
 import SubmitButton from './SubmitButton';
@@ -22,15 +22,26 @@ const CustomerSupportWidget = () => {
   const [result, setResult] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState([]);
-  const [imagePreview, setImagePreview] = useState(null);
+  const [imagePreviews, setImagePreviews] = useState([]);
+  const fileInputRef = useRef(null);
 
   const handleTextChange = (e) => {
     setTextInput(e.target.value);
   };
 
   const handleFileChange = (e) => {
-    setFiles(Array.from(e.target.files));
-    setImagePreview(URL.createObjectURL(e.target.files[0]));
+    const filesArray = Array.from(e.target.files);
+    
+    // Map each file to its corresponding URL and store in an array
+    const newImagePreviews = filesArray.map(file => URL.createObjectURL(file));
+    
+    setFiles(prevFiles => [...prevFiles, ...filesArray]);
+    setImagePreviews(prevPreviews => [...prevPreviews, ...newImagePreviews]);
+  };
+
+  const removeImagePreview = (index) => {
+    setImagePreviews(prevPreviews => prevPreviews.filter((_, i) => i !== index));
+    setFiles(prevFiles => prevFiles.filter((_, i) => i !== index));
   };
 
   const handleSubmit = async (e) => {
@@ -39,8 +50,7 @@ const CustomerSupportWidget = () => {
     setResult('');
 
     try {
-      // Handle text input submission
-      if (textInput) {
+      if (textInput && files.length === 0) {
         setMessages(prev => [...prev, { sender: 'user', text: textInput }]);
         const textResponse = await fetch(`${OpenAPIurl}/message/`, {
           method: 'POST',
@@ -64,10 +74,13 @@ const CustomerSupportWidget = () => {
         setMessages(prev => [...prev, { sender: 'system', text: resultText }]);
       }
 
-      // Handle file submission
       if (files.length > 0) {
         const formData = new FormData();
         files.forEach(file => formData.append('files', file));
+        if (textInput) {
+          formData.append('message', textInput);
+          setMessages(prev => [...prev, { sender: 'user', text: textInput }]);
+        }
         const fileResponse = await fetch(`${OpenAPIurl}/uploadfiles/`, {
           method: 'POST',
           body: formData,
@@ -87,33 +100,47 @@ const CustomerSupportWidget = () => {
       setIsLoading(false);
       setTextInput('');
       setFiles([]);
-      setImagePreview(null);
+      setImagePreviews([]);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = null; // Reset the file input
+      }
     }
   };
 
   return (
-    <div className={`customer-support-widget-container ${imagePreview ? 'customer-support-widget-extended' : ''}`}>
-      <h2 className="customer-support-widget-title">{ Title }</h2>
+    <div className="customer-support-widget-container">
+      <h2 className="customer-support-widget-title">{Title}</h2>
       <div className="customer-support-widget-content">
         <Chat messages={messages} />
       </div>
-      <div className="customer-support-widget-image-preview">
-        <ImagePreview imagePreview={imagePreview} setImagePreview={setImagePreview} />
-      </div>
       <form onSubmit={handleSubmit} className="customer-support-widget-form">
-        <FileInput 
-          handleFileChange={handleFileChange} 
-          className="customer-support-widget-file-input" 
-        />
-        <TextInput 
-          textInput={textInput} 
-          handleTextChange={handleTextChange} 
-          className="customer-support-widget-input" 
-        />
-        <SubmitButton 
-          isLoading={isLoading} 
-          className="customer-support-widget-submit-button" 
-        />
+        <div className="customer-support-widget-input-container">
+          <div className="customer-support-widget-image-preview-container">
+            {imagePreviews.map((preview, index) => (
+              <ImagePreview
+                key={index}
+                imagePreview={preview}
+                setImagePreview={() => removeImagePreview(index)}
+              />
+            ))}
+          </div>
+          <div className="customer-support-widget-controls">
+            <FileInput
+              handleFileChange={handleFileChange}
+              className="customer-support-widget-file-input"
+              inputRef={fileInputRef} // Pass the ref to FileInput component
+            />
+            <TextInput
+              textInput={textInput}
+              handleTextChange={handleTextChange}
+              className="customer-support-widget-input"
+            />
+            <SubmitButton
+              isLoading={isLoading}
+              className="customer-support-widget-submit-button"
+            />
+          </div>
+        </div>
       </form>
     </div>
   );

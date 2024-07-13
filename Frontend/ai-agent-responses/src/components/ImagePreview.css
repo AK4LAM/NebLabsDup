@@ -1,5 +1,8 @@
+/* ImagePreview.css */
 .image-preview-container {
     position: relative;
+    width: 40px;
+    height: 40px;
   }
   
   .image-preview-overlay {
@@ -8,25 +11,31 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white overlay */
     display: flex;
     justify-content: center;
     align-items: center;
   }
   
   .blurred-image {
-    width: 100px; /* Adjust the width of the image */
-    height: 100px; /* Adjust the height of the image */
-    filter: blur(2px); /* Reduce the blur effect */
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
   
   .close-button {
     position: absolute;
-    top: 5px;
-    right: 5px;
-    background: none;
+    top: -5px;
+    right: -5px;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
     border: none;
-    color: red;
-    font-size: 20px;
+    border-radius: 50%;
+    width: 15px;
+    height: 15px;
+    font-size: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     cursor: pointer;
   }
+  

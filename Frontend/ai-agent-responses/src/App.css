@@ -12,6 +12,6 @@
 }
 
 .chat-container {
-  height: calc(100% - 50px); /* Ensure it takes the full height of the container */
+  height: calc(100% - 10px); /* Ensure it takes the full height of the container */
   overflow-y: auto; /* Make the content scrollable */
 }

@@ -29,20 +29,37 @@
 }
 
 .customer-support-widget-title {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   font-weight: 300; 
   margin-bottom: 1.5rem;
   color: #000; /* Change text color to black */
   text-align: center;
 }
 
-.customer-support-widget-form {
+.customer-support-widget-input-container {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 10px;
+}
+
+.customer-support-widget-image-preview-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 10px;
+  min-height: 40px; /* Provides space even when empty */
+}
+
+.customer-support-widget-controls {
   display: flex;
   align-items: center;
-  padding: 10px;
-  border-top: 1px solid #ddd; /* Separate the form from the chat content */
-  background-color: #f9f9f9; /* Light background */
-  border-radius: 20px; /* Rounded corners */
+  gap: 10px;
+}
+
+.customer-support-widget-file-input {
+  flex: 0 0 auto;
 }
 
 .customer-support-widget-input {
@@ -59,8 +76,8 @@
   color: #bbb; /* Lighter placeholder text */
 }
 
-.customer-support-widget-file-input,
 .customer-support-widget-submit-button {
+  flex: 0 0 auto;
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -74,7 +91,6 @@
   transition: background-color 0.3s;
 }
 
-.customer-support-widget-file-input:hover,
 .customer-support-widget-submit-button:hover {
   background-color: #f0f0f0; /* Slightly darker on hover */
 }
