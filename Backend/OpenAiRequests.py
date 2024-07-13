@@ -34,7 +34,7 @@ def createAssistant(instructions: str = "",
                     name: str = "Default Name", 
                     description: str = "",
                     tools: list[dict[str, str]] = [{"type": "code_interpreter"}], 
-                    model: str = "gpt-4-1106-preview"):
+                    model: str = "gpt-4o"):
     assistant = client.beta.assistants.create(
         instructions=instructions,
         name=name,
@@ -73,13 +73,22 @@ async def uploadImage(file: UploadFile, message: str = ""):
             ],
             "max_tokens": 300
         }
+        print("Payload:", payload)  # Debug print statement for payload
         response = requests.post("https://api.openai.com/v1/chat/completions", headers=headers, json=payload)
+        print("Response:", response.text)  # Debug print statement for response
         if response.status_code == 200:
-            return response.json()
+            return extractMessage(response.json())
         else:
             raise HTTPException(status_code=response.status_code, detail=response.text)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+def extractMessage(chat_completion):
+    try:
+        message = chat_completion["choices"][0]["message"]["content"]
+        return str(message)
+    except (KeyError, IndexError) as e:
+        return "extraction failed"
 
 async def messageRun(content: str):
     qa = QA(question=content, answer="", sysPrompt="")
