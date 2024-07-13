@@ -29,7 +29,7 @@ chats: dict[str, list[QA]] = {
 
 currentChat = "Chat1"
 
-### TODO: (maybe) add instructions to tailor assistant to specific site?
+### TODO: add instructions to tailor assistant to specific site?
 def createAssistant(instructions: str = "", 
                     name: str = "Default Name", 
                     description: str = "",
@@ -73,9 +73,7 @@ async def uploadImage(file: UploadFile, message: str = ""):
             ],
             "max_tokens": 300
         }
-        print("Payload:", payload)  # Debug print statement for payload
         response = requests.post("https://api.openai.com/v1/chat/completions", headers=headers, json=payload)
-        print("Response:", response.text)  # Debug print statement for response
         if response.status_code == 200:
             return extractMessage(response.json())
         else:
@@ -86,7 +84,7 @@ async def uploadImage(file: UploadFile, message: str = ""):
 def extractMessage(chat_completion):
     try:
         message = chat_completion["choices"][0]["message"]["content"]
-        return str(message)
+        return message
     except (KeyError, IndexError) as e:
         return "extraction failed"
 
