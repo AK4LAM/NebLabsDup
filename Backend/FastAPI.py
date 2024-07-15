@@ -34,21 +34,22 @@ class ImageMessageRequest(BaseModel):
 # Endpoint for message requests
 @app.post("/message/")
 async def message_user(request: MessageRequest):
-    return StreamingResponse(messageRun(request.content), media_type="text/plain")
+    try:
+        results = await uploadMessageWithImages(request.content, [])
+        return StreamingResponse(results, media_type="text/plain")
+    except Exception as e:
+        logger.error(f"Error processing message: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 # Endpoint for file uploads with message
 @app.post("/uploadfiles/")
 async def create_upload_file(
     message: str = Form(""), 
-    files: List[UploadFile] = File(...)
+    files: List[UploadFile] = File(None)
 ):
     try:
-        # Process each file using the uploadImage function
-        results = []
-        for file in files:
-            result = await uploadImage(file, message)
-            results.append(result)
+        results = await uploadMessageWithImages(message, files)
         return results
     except Exception as e:
-        logger.error(f"Error processing image: {str(e)}")
+        logger.error(f"Error processing request: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))

@@ -44,38 +44,43 @@ def createAssistant(instructions: str = "",
     )
     return assistant
 
-async def uploadImage(file: UploadFile, message: str = ""):
+async def uploadMessageWithImages(message: str, files: List[UploadFile]):
     try:
-        image_content = await file.read()
-        base64_image = base64.b64encode(image_content).decode('utf-8')
+        messages = [{"role": "user", "content": message}]
+        
+        for file in files:
+            image_content = await file.read()
+            base64_image = base64.b64encode(image_content).decode('utf-8')
+            messages.append({
+                "role": "user",
+                "content": f"data:image/jpeg;base64,{base64_image}"
+            })
+        
+        # Include previous messages in the current chat
+        previous_messages = []
+        for qa in chats[currentChat]:
+            previous_messages.append({"role": "user", "content": qa.question})
+            previous_messages.append({"role": "assistant", "content": qa.answer})
+        
+        messages = previous_messages + messages
+
         headers = {
             "Content-Type": "application/json",
             "Authorization": f"Bearer {api_key}"
         }
+
         payload = {
             "model": "gpt-4o",
-            "messages": [
-                {
-                    "role": "user",
-                    "content": [
-                        {
-                            "type": "text",
-                            "text": message
-                        },
-                        {
-                            "type": "image_url",
-                            "image_url": {
-                                "url": f"data:image/jpeg;base64,{base64_image}"
-                            }
-                        }
-                    ]
-                }
-            ],
-            "max_tokens": 300
+            "messages": messages,
+            "max_tokens": 1000
         }
+
         response = requests.post("https://api.openai.com/v1/chat/completions", headers=headers, json=payload)
         if response.status_code == 200:
-            return extractMessage(response.json())
+            result = extractMessage(response.json())
+            # Add the current question and answer to the chat history
+            chats[currentChat].append(QA(question=message, answer=result))
+            return result
         else:
             raise HTTPException(status_code=response.status_code, detail=response.text)
     except Exception as e:
@@ -103,7 +108,7 @@ async def messageRun(content: str):
     run = client.beta.threads.runs.create(
             thread_id=thread.id,
             assistant_id=assistant.id,
-            stream=True #remove line to process without streaming
+            stream=True  # remove line to process without streaming
         )
 
     for event in run:
@@ -120,7 +125,6 @@ async def messageRun(content: str):
                         chats[currentChat][-1].answer += ""
 
 async def messageRunDebug():
-    content=input("Provide input >> ")
+    content = input("Provide input >> ")
     async for item in messageRun(content):
-        print (item, end="")
-
+        print(item, end="")
