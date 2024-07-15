@@ -29,7 +29,7 @@ chats: dict[str, list[QA]] = {
 
 currentChat = "Chat1"
 
-### TODO: add instructions to tailor assistant to specific site?
+### TODO: add instructions to tailor assistant to specific site
 def createAssistant(instructions: str = "", 
                     name: str = "Default Name", 
                     description: str = "",
