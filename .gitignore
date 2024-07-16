@@ -2,4 +2,7 @@
    *.log
 
 # Ignore all .venv files
-   *.venv
+   *.venv__pycache__
+*.pyc
+__pycache__
+*.pyc
