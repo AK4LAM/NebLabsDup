@@ -3,7 +3,6 @@ import React, { forwardRef } from 'react';
 import './FileInput.css';
 import paperclipIcon from '../images/paperclip-icon.png';
 
-// Use forwardRef to forward the ref to the input element
 const FileInput = forwardRef(({ handleFileChange }, ref) => {
   return (
     <div className="file-input-container">
@@ -16,7 +15,7 @@ const FileInput = forwardRef(({ handleFileChange }, ref) => {
         onChange={handleFileChange}
         multiple
         className="file-input"
-        ref={ref} // Forward the ref to the input element
+        ref={ref}
       />
     </div>
   );

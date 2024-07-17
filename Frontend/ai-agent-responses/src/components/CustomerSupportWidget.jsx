@@ -1,5 +1,5 @@
 // CustomerSupportWidget.jsx
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import TextInput from './TextInput';
 import FileInput from './FileInput';
 import SubmitButton from './SubmitButton';
@@ -106,7 +106,9 @@ const CustomerSupportWidget = () => {
 
   return (
     <div className="customer-support-widget-container">
-      <h2 className="customer-support-widget-title">{Title}</h2>
+      <div className="customer-support-widget-header">
+        <h2 className="customer-support-widget-title">{Title}</h2>
+      </div>
       <div className="customer-support-widget-content">
         <Chat messages={messages} />
       </div>

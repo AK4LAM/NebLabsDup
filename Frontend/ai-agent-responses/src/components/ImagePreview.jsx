@@ -2,7 +2,7 @@
 import React from 'react';
 import './ImagePreview.css';
 
-const ImagePreview = ({ imagePreview, setImagePreview }) => {
+const ImagePreview = ({ imagePreview, removeImagePreview }) => {
   if (!imagePreview) return null;
 
   return (
@@ -10,7 +10,7 @@ const ImagePreview = ({ imagePreview, setImagePreview }) => {
       <div className="image-preview-overlay">
         <img src={imagePreview} alt="Preview" className="blurred-image" />
         <button 
-          onClick={() => setImagePreview(null)} 
+          onClick={removeImagePreview} 
           className="close-button"
           aria-label="Close preview"
         >
