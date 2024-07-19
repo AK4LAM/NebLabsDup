@@ -2,39 +2,44 @@
 from openai import OpenAI
 import os
 import asyncio
-from fastapi import UploadFile, HTTPException, Form
-from typing import List
 import base64
-import requests
+import io
+from fastapi import UploadFile
+from typing import List, Union
+from pathlib import Path
 
-# Try to get the API key from the environment variable
-api_key = os.environ.get("OPENAI_API_KEY")
+client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
+assetsPath = ""
+assistantIDs: list[dict[str, str]] = []
+threadIDs: list[str] = []
+tokensUsed: int = 0
+fileOverview = []
 
-if not api_key:
-    raise ValueError("No OpenAI API key found. Please set the OPENAI_API_KEY environment variable.")
-
-# Create the client with the API key
-client = OpenAI(api_key=api_key)
-
-class QA():
+class QA:
     """A question and answer pair."""
     def __init__(self, question: str, answer: str, sysPrompt: str = ""):
         self.question = question
         self.answer = answer
         self.sysPrompt = sysPrompt
 
-chats: dict[str, list[QA]] = {
-    "Chat1": [],
-    }
+class Chat:
+    def __init__(self):
+        self.assistant = None
+        self.thread = None
+        self.messages = []
 
-currentChat = "Chat1"
+chats: dict[str, Chat] = {"Chat1": Chat()}
+current_chat_id = "Chat1"
 
-### TODO: add instructions to tailor assistant to specific site
-def createAssistant(instructions: str = "", 
-                    name: str = "Default Name", 
-                    description: str = "",
+
+def getModels():
+    return client.models.list()
+
+def createAssistant(instructions: str = "You are a customer support chatbot, in an e-commerce store that sells clothes. Give text only answers, without text styling and in concise and simple English. Do not list extensively, and ask further questions where necessary.", 
+                    name: str = "Customer Support Chatbot", 
+                    description: str = "Customer Support Chatbot",
                     tools: list[dict[str, str]] = [{"type": "code_interpreter"}], 
-                    model: str = "gpt-4o"):
+                    model: str = "gpt-4o-mini"):
     assistant = client.beta.assistants.create(
         instructions=instructions,
         name=name,
@@ -44,87 +49,101 @@ def createAssistant(instructions: str = "",
     )
     return assistant
 
-async def uploadMessageWithImages(message: str, files: List[UploadFile]):
-    try:
-        messages = [{"role": "user", "content": message}]
-        
-        for file in files:
-            image_content = await file.read()
-            base64_image = base64.b64encode(image_content).decode('utf-8')
-            messages.append({
-                "role": "user",
-                "content": f"data:image/jpeg;base64,{base64_image}"
-            })
-        
-        # Include previous messages in the current chat
-        previous_messages = []
-        for qa in chats[currentChat]:
-            previous_messages.append({"role": "user", "content": qa.question})
-            previous_messages.append({"role": "assistant", "content": qa.answer})
-        
-        messages = previous_messages + messages
+def createThread():
+    return client.beta.threads.create()
 
-        headers = {
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {api_key}"
-        }
+def retrieveThread(id: str):
+    thread = client.beta.threads.retrieve(id)
+    return thread
 
-        payload = {
-            "model": "gpt-4o",
-            "messages": messages,
-            "max_tokens": 1000
-        }
+def uploadDocs(files: Union[List[dict], None]):
+    if not files:
+        return None
 
-        response = requests.post("https://api.openai.com/v1/chat/completions", headers=headers, json=payload)
-        if response.status_code == 200:
-            result = extractMessage(response.json())
-            # Add the current question and answer to the chat history
-            chats[currentChat].append(QA(question=message, answer=result))
-            return result
+    assistantFiles = []
+    for file in files:
+        if isinstance(file, dict) and all(key in file for key in ['filename', 'content_type', 'content']):
+            file_name = file['filename']
+            file_type = file['content_type']
+            file_content = base64.b64decode(file['content'])
+
+            # Create a file-like object from the content
+            file_like = io.BytesIO(file_content)
+
+            uploaded_file = client.files.create(
+                file=(file_name, file_like, file_type),
+                purpose="assistants"
+            )
+            assistantFiles.append(
+                {"file_id": uploaded_file.id, "tools": [{"type": "file_search"}]}
+            )
+            fileOverview.append([file_name, uploaded_file.id])
         else:
-            raise HTTPException(status_code=response.status_code, detail=response.text)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+            print(f"Skipping invalid file: {file}")
+    return assistantFiles
 
-def extractMessage(chat_completion):
-    try:
-        message = chat_completion["choices"][0]["message"]["content"]
-        return message
-    except (KeyError, IndexError) as e:
-        return "extraction failed"
 
-async def messageRun(content: str):
-    qa = QA(question=content, answer="", sysPrompt="")
-    chats[currentChat].append(qa)
-
-    assistant = createAssistant()
-    thread = client.beta.threads.create()
-    client.beta.threads.messages.create(
-        thread_id=thread.id,
-        role="user",
-        content=content
+def createMessage(threadID, content, role, files=None):
+    message_content = [{"type": "text", "text": content}]
+    
+    if files:
+        for file in files:
+            message_content.append({
+                "type": "image_file",
+                "image_file": {"file_id": file['file_id']}
+            })
+    
+    print(f"Message content being sent: {message_content}")
+    return client.beta.threads.messages.create(
+        thread_id=threadID,
+        role=role,
+        content=message_content
     )
-    print("Assistant >> ", end="")
-    run = client.beta.threads.runs.create(
-            thread_id=thread.id,
-            assistant_id=assistant.id,
-            stream=True  # remove line to process without streaming
-        )
 
+
+async def getAnswer(threadID: str, assistantID: str):
+    run = client.beta.threads.runs.create(
+        thread_id=threadID,
+        assistant_id=assistantID,
+        stream=True
+    )
     for event in run:
-        # Check if 'delta' is present and it has 'content'
-        if hasattr(event.data, "delta"):
-            if hasattr(event.data.delta, "content"):
-                if hasattr(event.data.delta.content[0].text, "value"):
-                    answer_text = event.data.delta.content[0].text.value  # Extract the text value
-                    # Ensure answer_text is not None before concatenation
-                    if answer_text:
-                        yield answer_text
-                        chats[currentChat][-1].answer += answer_text
-                    else:
-                        chats[currentChat][-1].answer += ""
+        if hasattr(event, "data") and hasattr(event.data, "delta"):
+            delta = event.data.delta
+            if hasattr(delta, "content") and delta.content:
+                for content_item in delta.content:
+                    if hasattr(content_item, "text") and hasattr(content_item.text, "value"):
+                        answer_text = content_item.text.value
+                        if answer_text:
+                            yield answer_text
+
+
+async def messageRun(content: str, files: Union[List[dict], None] = None):
+    global current_chat_id
+    chat = chats[current_chat_id]
+    
+    if chat.assistant is None:
+        chat.assistant = createAssistant()
+    
+    if chat.thread is None:
+        chat.thread = createThread()
+    
+    qa = QA(question=content, answer="")
+    chat.messages.append(qa)
+    
+    role = "user"
+    assistant_files = uploadDocs(files) if files else None
+    createMessage(threadID=chat.thread.id, content=content, role=role, files=assistant_files)
+    
+    print("Assistant >> ", end="")
+    async for answer_text in getAnswer(threadID=chat.thread.id, assistantID=chat.assistant.id):
+        chat.messages[-1].answer += answer_text
+        yield answer_text
 
 async def messageRunDebug():
     content = input("Provide input >> ")
     async for item in messageRun(content):
         print(item, end="")
+
+# Uncomment the line below to run the debug function
+# asyncio.run(messageRunDebug())

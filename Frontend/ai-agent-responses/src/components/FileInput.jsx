@@ -3,9 +3,9 @@ import React, { forwardRef } from 'react';
 import './FileInput.css';
 import paperclipIcon from '../images/paperclip-icon.png';
 
-const FileInput = forwardRef(({ handleFileChange }, ref) => {
+const FileInput = forwardRef(({ handleFileChange, className }, ref) => {
   return (
-    <div className="file-input-container">
+    <div className="file-input-container ${className || ''}">
       <label htmlFor="fileInput" className="file-input-label">
         <img src={paperclipIcon} alt="Attach file" className="paperclip-icon" />
       </label>
