@@ -38,7 +38,7 @@ def getModels():
 def createAssistant(instructions: str = "You are a customer support chatbot, in an e-commerce store that sells clothes. Give text only answers, without text styling and in concise and simple English. Do not list extensively, and ask further questions where necessary.", 
                     name: str = "Customer Support Chatbot", 
                     description: str = "Customer Support Chatbot",
-                    tools: list[dict[str, str]] = [{"type": "code_interpreter"}], 
+                    tools: list[dict[str, str]] = [{"type": "file_search"}], 
                     model: str = "gpt-4o-mini"):
     assistant = client.beta.assistants.create(
         instructions=instructions,
