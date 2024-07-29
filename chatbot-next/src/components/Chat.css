@@ -26,7 +26,9 @@
 
 .message-content p {
   display: -webkit-box;
+  display: box; /* Standard property for compatibility */
   -webkit-line-clamp: 3; /* Number of lines before truncating */
+  line-clamp: 3; /* Standard property for compatibility */
   -webkit-box-orient: vertical; /* Vertical orientation */
   overflow: hidden; /* Hides overflow */
   text-overflow: ellipsis; /* Adds ellipsis to indicate truncated text */
