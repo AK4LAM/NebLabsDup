@@ -7,7 +7,7 @@ const SubmitButton = ({ isLoading }) => {
     <button
       type="submit"
       disabled={isLoading}
-      className={`submit-button ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+      className="submit-button"
     >
       {isLoading ? (
         <span className="spinner"></span>

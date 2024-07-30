@@ -7,15 +7,17 @@
   font-weight: 500;
   color: #333; /* Dark text */
   background-color: #fff; /* White background */
-  transition: all 0.3s;
+  transition: background-color 0.3s, transform 0.2s;
   display: flex;
   align-items: center;
   justify-content: center;
   border: 1px solid #ddd; /* Light border */
+  cursor: pointer;
 }
 
 .submit-button:hover {
   background-color: #f0f0f0; /* Slightly darker on hover */
+  transform: scale(1.1); /* Slightly enlarge on hover */
 }
 
 .submit-button:focus {

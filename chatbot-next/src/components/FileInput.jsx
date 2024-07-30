@@ -1,12 +1,13 @@
 // FileInput.jsx
-import React from 'react';
+import React, { forwardRef } from 'react';
 import './FileInput.css';
+import paperclipIcon from '../images/paperclip-icon.png';
 
-const FileInput = ({ handleFileChange }) => {
+const FileInput = forwardRef(({ handleFileChange, className }, ref) => {
   return (
-    <div className="file-input-container">
+    <div className="file-input-container ${className || ''}">
       <label htmlFor="fileInput" className="file-input-label">
-        <img src="/paperclip-icon.png" alt="Attach file" className="paperclip-icon" />
+        <img src={paperclipIcon} alt="Attach file" className="paperclip-icon" />
       </label>
       <input
         type="file"
@@ -14,9 +15,10 @@ const FileInput = ({ handleFileChange }) => {
         onChange={handleFileChange}
         multiple
         className="file-input"
+        ref={ref}
       />
     </div>
   );
-};
+});
 
 export default FileInput;

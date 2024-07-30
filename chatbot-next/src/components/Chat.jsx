@@ -7,7 +7,7 @@ const Chat = ({ messages }) => {
     <div className="chat-container">
       {messages.map((message, index) => (
         <div key={index} className={`message ${message.sender}`}>
-          {message.text}
+          {message.content}
         </div>
       ))}
     </div>

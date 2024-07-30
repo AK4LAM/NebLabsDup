@@ -15,6 +15,12 @@
   align-items: center;
   justify-content: center;
   border: 1px solid #ddd; /* Light border */
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.file-input-label:hover {
+  background-color: #f0f0f0; /* Light grey background on hover */
+  border-color: #bbb; /* Darker border on hover */
 }
 
 .file-input {
@@ -31,4 +37,9 @@
   width: 20px;
   height: 20px;
   filter: invert(0); /* Dark icon */
+  transition: filter 0.3s;
+}
+
+.file-input-label:hover .paperclip-icon {
+  filter: invert(0.5); /* Slightly lighter icon on hover */
 }

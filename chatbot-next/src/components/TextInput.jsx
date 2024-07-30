@@ -12,6 +12,7 @@ const TextInput = ({ textInput, handleTextChange }) => {
         onChange={handleTextChange}
         className="text-input"
         placeholder="Enter your message"
+        aria-label="Text input for customer support message"
       />
     </div>
   );

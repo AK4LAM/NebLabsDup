@@ -3,74 +3,95 @@
   position: fixed;
   bottom: 20px;
   right: 20px;
-  width: 300px; 
-  height: 400px; 
-  background-color: white; 
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
-  border-radius: 8px; 
-  overflow: hidden; 
-  border: 2px solid #4CAF50;
-  border-radius: 10px; 
-  padding: 20px; 
+  width: 320px;
+  height: 600px; /* Adjusted for more space */
+  background-color: white;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  overflow: hidden;
+  border: 2px solid #e0e0e0;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+}
+
+.customer-support-widget-header {
+  background-color: #007bff;
+  color: white;
+  padding: 10px;
+  text-align: center;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.customer-support-widget-title {
+  font-size: 1.2rem;
+  font-weight: 500;
+  margin: 0;
 }
 
 .customer-support-widget-content {
   flex: 1;
+  padding: 10px;
   overflow-y: auto;
-  color: #000; /* Change text color to black */
-}
-
-.customer-support-widget-title {
-  font-size: 1.5rem;
-  font-weight: 300; 
-  margin-bottom: 1.5rem;
-  color: #000; /* Change text color to black */
-  text-align: center;
 }
 
 .customer-support-widget-form {
+  padding: 10px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.customer-support-widget-input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.customer-support-widget-image-preview-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 10px;
+  min-height: 40px;
+}
+
+.customer-support-widget-controls {
   display: flex;
   align-items: center;
-  padding: 10px;
-  border-top: 1px solid #ddd; /* Separate the form from the chat content */
-  background-color: #f9f9f9; /* Light background */
-  border-radius: 20px; /* Rounded corners */
+  gap: 10px;
+}
+
+.customer-support-widget-file-input {
+  flex: 0 0 auto;
 }
 
 .customer-support-widget-input {
   flex: 1;
   margin: 0 10px;
-  background-color: #fff; /* White background for input */
-  color: #000; /* Change text color to black */
-  border: 1px solid #ddd; /* Light border */
+  background-color: #fff;
+  color: #000;
+  border: 1px solid #ddd;
   border-radius: 20px;
   padding: 10px;
 }
 
 .customer-support-widget-input::placeholder {
-  color: #bbb; /* Lighter placeholder text */
+  color: #bbb;
 }
 
-.customer-support-widget-file-input,
 .customer-support-widget-submit-button {
+  flex: 0 0 auto;
   width: 40px;
   height: 40px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #fff; /* White background for buttons */
-  color: #333; /* Dark text */
-  border: 1px solid #ddd; /* Light border */
+  background-color: #007bff;
+  color: white;
+  border: none;
   cursor: pointer;
   transition: background-color 0.3s;
 }
 
-.customer-support-widget-file-input:hover,
 .customer-support-widget-submit-button:hover {
-  background-color: #f0f0f0; /* Slightly darker on hover */
+  background-color: #0056b3;
 }
