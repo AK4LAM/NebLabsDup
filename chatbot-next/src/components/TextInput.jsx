@@ -1,3 +1,4 @@
+'use client';
 // TextInput.jsx
 import React from 'react';
 import './TextInput.css';

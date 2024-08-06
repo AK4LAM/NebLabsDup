@@ -1,3 +1,4 @@
+'use client';
 // Chat.jsx
 import React from 'react';
 import './Chat.css';

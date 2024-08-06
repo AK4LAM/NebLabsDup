@@ -1,3 +1,4 @@
+'use client';
 // ImagePreview.jsx
 import React from 'react';
 import './ImagePreview.css';

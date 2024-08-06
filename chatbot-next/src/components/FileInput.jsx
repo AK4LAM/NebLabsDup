@@ -1,13 +1,14 @@
+'use client';
 // FileInput.jsx
 import React, { forwardRef } from 'react';
 import './FileInput.css';
-//import paperclipIcon from '/images/paperclip-icon.png';
+import paperclipIcon from '../images/paperclip-icon.png';
 
 const FileInput = forwardRef(({ handleFileChange, className }, ref) => {
   return (
-    <div className={`file-input-container ${className || ''}`}>
+    <div className="file-input-container ${className || ''}">
       <label htmlFor="fileInput" className="file-input-label">
-        <img src="/images/paperclip-icon.png" alt="Attach file" className="paperclip-icon" />
+        <img src={paperclipIcon} alt="Attach file" className="paperclip-icon" />
       </label>
       <input
         type="file"
