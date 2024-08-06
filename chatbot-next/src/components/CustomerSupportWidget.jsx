@@ -1,3 +1,4 @@
+'use client';
 // CustomerSupportWidget.jsx
 import React, { useState } from 'react';
 import TextInput from './TextInput';
