@@ -1,6 +1,5 @@
 // App.jsx
 import CustomerSupportWidget from '../components/CustomerSupportWidget.jsx'
-// !FIX! import './App.css'
 import '../components/CustomerSupportWidget.css'
 import '../components/FileInput.css'
 import '../components/TextInput.css'
@@ -16,5 +15,4 @@ function App() {
     </>
   )
 }
-
 export default App

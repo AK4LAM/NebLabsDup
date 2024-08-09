@@ -24,6 +24,10 @@ async def chat_endpoint(
     message: str = Form(...), 
     files: List[UploadFile] = File([])
 ):
+
+    logger.info(f"Received message: {message}")
+    logger.info(f"Received files: {[file.filename for file in files]}")
+
     processed_files = []
     for file in files:
         contents = await file.read()

@@ -12,7 +12,7 @@ import './CustomerSupportWidget.css';
 const Title = "Customer Support Widget";
 
 // Define the URL for OpenAPI server
-const OpenAPIurl = "/api/chat/"; // Update the URL to the /chat/ endpoint
+const OpenAPIurl = "http://127.0.0.1:8000/chat/";
 
 // Define the CustomerSupportWidget component
 const CustomerSupportWidget = () => {
