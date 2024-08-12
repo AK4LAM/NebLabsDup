@@ -12,7 +12,10 @@ import './CustomerSupportWidget.css';
 const Title = "Customer Support Widget";
 
 // Define the URL for OpenAPI server
-const OpenAPIurl = "http://127.0.0.1:8000/chat/";
+const OpenAPIurl = "/chat/";
+
+// OpenAI API key
+const APIkey = process.env.NEXT_PUBLIC_OPENAI_API_KEY; 
 
 // Define the CustomerSupportWidget component
 const CustomerSupportWidget = () => {
@@ -78,6 +81,9 @@ const CustomerSupportWidget = () => {
     try {
       const response = await fetch(OpenAPIurl, {
           method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${APIkey}`,
+        },
           body: formData,
       });
 

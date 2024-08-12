@@ -17,11 +17,14 @@
 .message.user {
   background-color: #e0f7fa;
   align-self: flex-end;
+  color: #000000;
 }
 
 .message.system {
   background-color: #2e88ff;
   align-self: flex-start;
+  color: #000000;
+
 }
 
 .message-content p {
