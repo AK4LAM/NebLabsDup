@@ -7,8 +7,17 @@ from OpenAiRequests import messageRun, uploadDocs
 import logging
 import asyncio
 import base64
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -53,3 +62,7 @@ async def chat_endpoint(
             raise
 
     return StreamingResponse(event_stream(), media_type="text/event-stream")
+
+@app.get("/test")
+async def test():
+    return {"message": "Test successful"}

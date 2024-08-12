@@ -1,6 +1,6 @@
 'use client';
 // CustomerSupportWidget.jsx
-import React, { useState } from 'react';
+import React, { useState , useEffect} from 'react';
 import TextInput from './TextInput';
 import FileInput from './FileInput';
 import SubmitButton from './SubmitButton';
@@ -12,10 +12,7 @@ import './CustomerSupportWidget.css';
 const Title = "Customer Support Widget";
 
 // Define the URL for OpenAPI server
-const OpenAPIurl = "/chat/";
-
-// OpenAI API key
-const APIkey = process.env.NEXT_PUBLIC_OPENAI_API_KEY; 
+const OpenAPIurl = "/api/chat/";
 
 // Define the CustomerSupportWidget component
 const CustomerSupportWidget = () => {
@@ -44,6 +41,13 @@ const CustomerSupportWidget = () => {
     setFiles(prevFiles => prevFiles.filter((_, i) => i !== index));
   };
   
+  useEffect(() => {
+    fetch('/api/test')
+      .then(response => response.text())
+      .then(data => console.log(data))
+      .catch(error => console.error('Error:', error));
+  }, []);
+
   async function handleSubmit(event) {
     event.preventDefault();
     setIsLoading(true);
@@ -81,9 +85,6 @@ const CustomerSupportWidget = () => {
     try {
       const response = await fetch(OpenAPIurl, {
           method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${APIkey}`,
-        },
           body: formData,
       });
 
