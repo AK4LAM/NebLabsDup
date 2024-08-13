@@ -22,4 +22,6 @@ const ImagePreview = ({ imagePreview, removeImagePreview }) => {
   );
 };
 
+ImagePreview.displayName = 'ImagePreview';
+
 export default ImagePreview;
