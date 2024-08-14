@@ -4,7 +4,6 @@ import React, { forwardRef } from 'react';
 import './FileInput.css';
 import paperclipIcon from '../images/paperclip-icon.png';
 
-// eslint-disable-next-line react/display-name
 const FileInput = forwardRef(({ handleFileChange, className }, ref) => {
   return (
     <div className={`file-input-container ${className || ''}`}>
@@ -25,5 +24,4 @@ const FileInput = forwardRef(({ handleFileChange, className }, ref) => {
 
 // Add display name for better debugging
 FileInput.displayName = 'FileInput';
-
 export default FileInput;
