@@ -1,10 +1,10 @@
-// eslint-disable-next-line react/display-name
-'use client';
 // FileInput.jsx
+'use client';
 import React, { forwardRef } from 'react';
 import './FileInput.css';
 import paperclipIcon from '../images/paperclip-icon.png';
 
+// eslint-disable-next-line react/display-name
 const FileInput = forwardRef(({ handleFileChange, className }, ref) => {
   return (
     <div className={`file-input-container ${className || ''}`}>
